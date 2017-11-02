@@ -14,6 +14,7 @@ setup(
         'jenkins_jobs.parameters': [
             'cascade-choice = jenkins_jobs_active_choice.active_choice:cascade_choice_parameter',
             'validating = jenkins_jobs_active_choice.validating:validating_parameter',
+            'hidden = jenkins_jobs_active_choice.hidden:hidden_parameter',
             'autocomplete = jenkins_jobs_active_choice.autocomplete:autocomplete_parameter'
         ]
     },
