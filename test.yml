@@ -1,0 +1,29 @@
+
+- job:
+    name: BuildFoo
+    project-type: pipeline
+    sandbox: false
+    parameters:
+      - validating:
+          name: STR_PARAM
+          regex: '\w+{3,10}'
+      - hidden:
+          name: foo
+          value: bar
+      - autocomplete:
+          name: CASCADE_CHOICE
+          script:
+            -
+             !include-raw: input.raw
+            - |
+              return ['foo:selected', 'bar']
+          description: "A parameter named CASCADE_CHOICE which options foo and bar."
+          displayExpression: value
+          sandbox: false
+
+    pipeline-scm:
+      scm:
+        - git:
+            url: git@gitlab.cwscloud.net:dmc/helm-configs.git
+            credentials-id: jenkins-gitlab
+      script-path: beekeeper/Jenkinsfile
