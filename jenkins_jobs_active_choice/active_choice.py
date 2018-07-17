@@ -37,7 +37,7 @@ OPTIONAL = [
 
 
 def _to_str(x):
-    if not isinstance(x, (str, unicode)):
+    if not isinstance(x, str):
         return str(x).lower()
     return x
 

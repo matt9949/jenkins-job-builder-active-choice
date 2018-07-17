@@ -31,12 +31,15 @@ REQUIRED = [
 OPTIONAL = [
     # ( yaml tag, xml tag, default value )
     ('description', 'description', ''),
-    ('displayExpression', 'displayExpression', 'value')
+    ('displayExpression', 'displayExpression', 'value'),
+    ('valueExpression', 'valueExpression', ''),
+    ('defaultValue', 'defaultValue', '')
+
 ]
 
 
 def _to_str(x):
-    if not isinstance(x, (str, unicode)):
+    if not isinstance(x, str):
         return str(x).lower()
     return x
 
