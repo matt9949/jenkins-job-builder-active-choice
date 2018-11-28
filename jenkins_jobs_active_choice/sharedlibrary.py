@@ -67,7 +67,7 @@ def _add_script(xml_parent, tag, value):
 
 
 def _unique_string(project, name):
-    return 'pipelinejob_sharedlibrary-{0}-{1}'.format(project, name).lower()
+    return 'sharedlibrary-{0}-{1}'.format(project, name).lower()
 
 
 def sharedlibrary_parameter(parser, xml_parent, data):
