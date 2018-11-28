@@ -70,7 +70,7 @@ def _unique_string(project, name):
     return 'pipelinejob_sharedlibrary-{0}-{1}'.format(project, name).lower()
 
 
-def pipelinejob_sharedlibrary_parameter(parser, xml_parent, data):
+def sharedlibrary_parameter(parser, xml_parent, data):
     """yaml: cascade-choice
     Creates an active choice parameter
     Requires the Jenkins :jenkins-wiki:`Active Choices Plugin <Active+Choices+Plugin>`.
