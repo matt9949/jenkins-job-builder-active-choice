@@ -110,9 +110,9 @@ def sharedlibrary_parameter(parser, xml_parent, data):
         _add_element(library_configuration, tag, data.get(name, default))
 
 
-    retriever = Xml.SubElement(library_configuration, 'org.jenkinsci.plugins.workflow.libs.LibraryConfiguration',
+    retriever = Xml.SubElement(library_configuration, 'retriever',
                                {'class': 'org.jenkinsci.plugins.workflow.libs.SCMRetriever'})
-    scm = Xml.SubElement(retriever, 'org.jenkinsci.plugins.workflow.libs.LibraryConfiguration',
+    scm = Xml.SubElement(retriever, 'scm',
                          {'class': 'hudson.plugins.git.GitSCM',
                           'plugin': 'git@3.9.1'})
     user_remote_configs = Xml.SubElement(scm, 'userRemoteConfigs')
