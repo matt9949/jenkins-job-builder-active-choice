@@ -14,64 +14,53 @@
 import xml.etree.ElementTree as Xml
 import jenkins_jobs.modules.base
 
-
-# - active-choice:
-#   name: CASCADE_CHOICE
-#   script: |
-#     return ['foo:selected', 'bar']
-#   description: "A parameter named CASCADE_CHOICE which options foo and bar."
-#   displayExpression: value  [OPTIONAL]
-#   sandbox: false            [OPTIONAL]
-
-
-REQUIRED_LIBRARY_CONFIGURATION = [
-    # (yaml tag)
-    ('name', 'name'),
-    ('defaultVersion', 'defaultVersion')
-]
-
-REQUIRED_USERREMOTECONFIG_CONFIGURATION = [
-    # (yaml tag)
-    ('repositoryUrl', 'url'),
-    ('credentialsId', 'credentialsId')
-]
-
-REQUIRED_BRANCHES_CONFIGURATION = [
-    ('branchSpecifier', 'name')
-]
-
-OPTIONAL_LIBRARY_CONFIGURATION = [
-    # ( yaml tag, xml tag, default value )
-    ('loadImplicitly', 'implicit', 'true'),
-    ('allowDefaultVersionOverride', 'allowVersionOverride', 'true'),
-    ('includeInChangesets', 'includeInChangesets', 'false')
-]
-
-
-def _to_str(x):
-    if not isinstance(x, str):
-        return str(x).lower()
-    return x
-
-
-def _add_element(xml_parent, tag, value):
-    Xml.SubElement(xml_parent, tag).text = _to_str(value)
-
-
-def _add_script(xml_parent, tag, value):
-    if type(value) is list:
-        script_str = ''.join(value)
-    else:
-        script_str = value
-    # section = Xml.SubElement(xml_parent, tag)
-    Xml.SubElement(xml_parent, "script").text = script_str
-
-
-def _unique_string(project, name):
-    return 'sharedlibrary-{0}-{1}'.format(project, name).lower()
-
-
 class SharedLibrary(jenkins_jobs.modules.base.Base):
+
+    REQUIRED_LIBRARY_CONFIGURATION = [
+        # (yaml tag)
+        ('name', 'name'),
+        ('defaultVersion', 'defaultVersion')
+    ]
+
+    REQUIRED_USERREMOTECONFIG_CONFIGURATION = [
+        # (yaml tag)
+        ('repositoryUrl', 'url'),
+        ('credentialsId', 'credentialsId')
+    ]
+    
+    REQUIRED_BRANCHES_CONFIGURATION = [
+        ('branchSpecifier', 'name')
+    ]
+
+    OPTIONAL_LIBRARY_CONFIGURATION = [
+        # ( yaml tag, xml tag, default value )
+        ('loadImplicitly', 'implicit', 'true'),
+        ('allowDefaultVersionOverride', 'allowVersionOverride', 'true'),
+        ('includeInChangesets', 'includeInChangesets', 'false')
+    ]
+
+
+    def _to_str(x):
+        if not isinstance(x, str):
+            return str(x).lower()
+        return x
+
+
+    def _add_element(xml_parent, tag, value):
+        Xml.SubElement(xml_parent, tag).text = _to_str(value)
+
+
+    def _add_script(xml_parent, tag, value):
+        if type(value) is list:
+            script_str = ''.join(value)
+        else:
+            script_str = value
+        # section = Xml.SubElement(xml_parent, tag)
+        Xml.SubElement(xml_parent, "script").text = script_str
+
+
+    def _unique_string(project, name):
+        return 'sharedlibrary-{0}-{1}'.format(project, name).lower()
 
     def gen_xml(parser, xml_parent, data):
         """yaml: cascade-choice
