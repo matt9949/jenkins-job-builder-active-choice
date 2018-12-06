@@ -78,13 +78,13 @@ class SharedLibrary(jenkins_jobs.modules.base.Base):
             for name, tag in self.REQUIRED_LIBRARY_CONFIGURATION:
                 try:
                     print("Found argument: " + name + ",  value: " + tag)
-                    print("data is:" + json.dumps(data))
-                    self._add_element(library_configuration, tag, data[name])
+                    print("sharedlibrary is:" + json.dumps(sharedlibrary))
+                    self._add_element(library_configuration, tag, sharedlibrary[name])
                 except KeyError:
                     raise Exception("missing mandatory argument %s" % name)
 
             for name, tag, default in self.OPTIONAL_LIBRARY_CONFIGURATION:
-                self._add_element(library_configuration, tag, data.get(name, default))
+                self._add_element(library_configuration, tag, sharedlibrary.get(name, default))
 
 
             retriever = Xml.SubElement(library_configuration, 'retriever',
@@ -97,7 +97,7 @@ class SharedLibrary(jenkins_jobs.modules.base.Base):
 
             for name, tag in self.REQUIRED_USERREMOTECONFIG_CONFIGURATION:
                 try:
-                    self._add_element(user_remote_config, tag, data[name])
+                    self._add_element(user_remote_config, tag, sharedlibrary[name])
                 except KeyError:
                     raise Exception("missing mandatory argument %s" % name)
 
@@ -107,7 +107,7 @@ class SharedLibrary(jenkins_jobs.modules.base.Base):
 
             for name, tag in self.REQUIRED_BRANCHES_CONFIGURATION:
                 try:
-                    self._add_element(branch_spec, tag, data[name])
+                    self._add_element(branch_spec, tag, sharedlibrary[name])
                 except KeyError:
                     raise Exception("missing mandatory argument %s" % name)
 
