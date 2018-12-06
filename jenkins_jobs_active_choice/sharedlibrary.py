@@ -40,7 +40,7 @@ class SharedLibrary(jenkins_jobs.modules.base.Base):
     component_type = 'sharedlibrary'
     component_list_type = 'sharedlibrary'
 
-    def gen_xml(self, xml_parent, data):
+    def sharedlibrary(self, xml_parent, data):
         properties = xml_parent.find('properties')
         if properties is None:
             properties = XML.SubElement(xml_parent, 'properties')
