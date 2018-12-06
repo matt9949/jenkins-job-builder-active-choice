@@ -13,6 +13,7 @@
 
 import xml.etree.ElementTree as Xml
 import jenkins_jobs.modules.base
+import json
 
 class SharedLibrary(jenkins_jobs.modules.base.Base):
 
@@ -91,6 +92,8 @@ class SharedLibrary(jenkins_jobs.modules.base.Base):
 
         for name, tag in self.REQUIRED_LIBRARY_CONFIGURATION:
             try:
+                print("Found argument: " + name + ",  value: " + tag)
+                print("data is:" + json.dumps(data))
                 self._add_element(library_configuration, tag, data[name])
             except KeyError:
                 raise Exception("missing mandatory argument %s" % name)
