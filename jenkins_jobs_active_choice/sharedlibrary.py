@@ -27,7 +27,7 @@ class SharedLibrary(jenkins_jobs.modules.base.Base):
         ('repositoryUrl', 'url'),
         ('credentialsId', 'credentialsId')
     ]
-    
+
     REQUIRED_BRANCHES_CONFIGURATION = [
         ('branchSpecifier', 'name')
     ]
@@ -40,17 +40,17 @@ class SharedLibrary(jenkins_jobs.modules.base.Base):
     ]
 
 
-    def _to_str(x):
+    def _to_str(self, x):
         if not isinstance(x, str):
             return str(x).lower()
         return x
 
 
-    def _add_element(xml_parent, tag, value):
-        Xml.SubElement(xml_parent, tag).text = _to_str(value)
+    def _add_element(self, xml_parent, tag, value):
+        Xml.SubElement(xml_parent, tag).text = self._to_str(value)
 
 
-    def _add_script(xml_parent, tag, value):
+    def _add_script(self, xml_parent, tag, value):
         if type(value) is list:
             script_str = ''.join(value)
         else:
@@ -59,10 +59,10 @@ class SharedLibrary(jenkins_jobs.modules.base.Base):
         Xml.SubElement(xml_parent, "script").text = script_str
 
 
-    def _unique_string(project, name):
+    def _unique_string(self, project, name):
         return 'sharedlibrary-{0}-{1}'.format(project, name).lower()
 
-    def gen_xml(parser, xml_parent, data):
+    def gen_xml(self, xml_parent, data):
         """yaml: cascade-choice
         Creates an active choice parameter
         Requires the Jenkins :jenkins-wiki:`Active Choices Plugin <Active+Choices+Plugin>`.
@@ -89,14 +89,14 @@ class SharedLibrary(jenkins_jobs.modules.base.Base):
         libraries = Xml.SubElement(section, 'libraries')
         library_configuration = Xml.SubElement(libraries, 'org.jenkinsci.plugins.workflow.libs.LibraryConfiguration')
 
-        for name, tag in REQUIRED_LIBRARY_CONFIGURATION:
+        for name, tag in self.REQUIRED_LIBRARY_CONFIGURATION:
             try:
-                _add_element(library_configuration, tag, data[name])
+                self._add_element(library_configuration, tag, data[name])
             except KeyError:
                 raise Exception("missing mandatory argument %s" % name)
 
-        for name, tag, default in OPTIONAL_LIBRARY_CONFIGURATION:
-            _add_element(library_configuration, tag, data.get(name, default))
+        for name, tag, default in self.OPTIONAL_LIBRARY_CONFIGURATION:
+            self._add_element(library_configuration, tag, data.get(name, default))
 
 
         retriever = Xml.SubElement(library_configuration, 'retriever',
@@ -107,9 +107,9 @@ class SharedLibrary(jenkins_jobs.modules.base.Base):
         user_remote_configs = Xml.SubElement(scm, 'userRemoteConfigs')
         user_remote_config = Xml.SubElement(user_remote_configs, 'hudson.plugins.git.UserRemoteConfig')
 
-        for name, tag in REQUIRED_USERREMOTECONFIG_CONFIGURATION:
+        for name, tag in self.REQUIRED_USERREMOTECONFIG_CONFIGURATION:
             try:
-                _add_element(user_remote_config, tag, data[name])
+                self._add_element(user_remote_config, tag, data[name])
             except KeyError:
                 raise Exception("missing mandatory argument %s" % name)
 
@@ -117,10 +117,10 @@ class SharedLibrary(jenkins_jobs.modules.base.Base):
         branches = Xml.SubElement(scm, 'branches')
         branch_spec = Xml.SubElement(branches, 'hudson.plugins.git.BranchSpec')
 
-        for name, tag in REQUIRED_BRANCHES_CONFIGURATION:
+        for name, tag in self.REQUIRED_BRANCHES_CONFIGURATION:
             try:
-                _add_element(branch_spec, tag, data[name])
+                self._add_element(branch_spec, tag, data[name])
             except KeyError:
                 raise Exception("missing mandatory argument %s" % name)
 
-        _add_element(scm, 'doGenerateSubmoduleConfigurations', 'false')
+        self._add_element(scm, 'doGenerateSubmoduleConfigurations', 'false')
