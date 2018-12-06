@@ -18,7 +18,7 @@ setup(
             'autocomplete = jenkins_jobs_active_choice.autocomplete:autocomplete_parameter'
         ],
         'jenkins_jobs.modules': [
-            'sharedlibrary = jenkins_jobs_active_choice.sharedlibrary:sharedlibrary'
+            'sharedlibrary = jenkins_jobs_active_choice.sharedlibrary:SharedLibrary'
         ]
     },
     packages=['jenkins_jobs_active_choice'],

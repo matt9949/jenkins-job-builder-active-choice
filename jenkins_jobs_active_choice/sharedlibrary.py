@@ -12,6 +12,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import xml.etree.ElementTree as Xml
+import jenkins_jobs.modules.base
 
 
 # - active-choice:
@@ -70,66 +71,67 @@ def _unique_string(project, name):
     return 'sharedlibrary-{0}-{1}'.format(project, name).lower()
 
 
-def sharedlibrary(parser, xml_parent, data):
-    """yaml: cascade-choice
-    Creates an active choice parameter
-    Requires the Jenkins :jenkins-wiki:`Active Choices Plugin <Active+Choices+Plugin>`.
-    :arg str name: the name of the parameter
-    :arg str script: the groovy script which generates choices
-    :arg str description: a description of the parameter (optional)
-    arg: int visible-item-count: a number of visible items
-    arg: str fallback-script: a groovy script which will be evaluated if main script fails (optional)
-    arg: str reference: the name of parameter on changing that the parameter will be re-evaluated
-    arg: str choice-type: a choice type, can be on of single, multi, checkbox or radio
-    arg: bool filterable: added text box to filter elements
-    Example::
-    .. code-block:: yaml
-        - cascade-choice:
-          name: CASCADE_CHOICE
-          project: test_project
-          script: |
-            return ['foo', 'bar']
-    """
+class SharedLibrary(jenkins_jobs.modules.base.Base):
 
-    element_name = 'org.jenkinsci.plugins.workflow.libs.FolderLibraries'
-    section = Xml.SubElement(xml_parent, element_name,
-                             {'plugin': 'workflow-cps-global-lib@2.12'})
-    libraries = Xml.SubElement(section, 'libraries')
-    library_configuration = Xml.SubElement(libraries, 'org.jenkinsci.plugins.workflow.libs.LibraryConfiguration')
+    def gen_xml(parser, xml_parent, data):
+        """yaml: cascade-choice
+        Creates an active choice parameter
+        Requires the Jenkins :jenkins-wiki:`Active Choices Plugin <Active+Choices+Plugin>`.
+        :arg str name: the name of the parameter
+        :arg str script: the groovy script which generates choices
+        :arg str description: a description of the parameter (optional)
+        arg: int visible-item-count: a number of visible items
+        arg: str fallback-script: a groovy script which will be evaluated if main script fails (optional)
+        arg: str reference: the name of parameter on changing that the parameter will be re-evaluated
+        arg: str choice-type: a choice type, can be on of single, multi, checkbox or radio
+        arg: bool filterable: added text box to filter elements
+        Example::
+        .. code-block:: yaml
+            - cascade-choice:
+              name: CASCADE_CHOICE
+              project: test_project
+              script: |
+                return ['foo', 'bar']
+        """
 
-    for name, tag in REQUIRED_LIBRARY_CONFIGURATION:
-        try:
-            _add_element(library_configuration, tag, data[name])
-        except KeyError:
-            raise Exception("missing mandatory argument %s" % name)
+        element_name = 'org.jenkinsci.plugins.workflow.libs.FolderLibraries'
+        section = Xml.SubElement(xml_parent, element_name,
+                                 {'plugin': 'workflow-cps-global-lib@2.12'})
+        libraries = Xml.SubElement(section, 'libraries')
+        library_configuration = Xml.SubElement(libraries, 'org.jenkinsci.plugins.workflow.libs.LibraryConfiguration')
 
-    for name, tag, default in OPTIONAL_LIBRARY_CONFIGURATION:
-        _add_element(library_configuration, tag, data.get(name, default))
+        for name, tag in REQUIRED_LIBRARY_CONFIGURATION:
+            try:
+                _add_element(library_configuration, tag, data[name])
+            except KeyError:
+                raise Exception("missing mandatory argument %s" % name)
 
-
-    retriever = Xml.SubElement(library_configuration, 'retriever',
-                               {'class': 'org.jenkinsci.plugins.workflow.libs.SCMRetriever'})
-    scm = Xml.SubElement(retriever, 'scm',
-                         {'class': 'hudson.plugins.git.GitSCM',
-                          'plugin': 'git@3.9.1'})
-    user_remote_configs = Xml.SubElement(scm, 'userRemoteConfigs')
-    user_remote_config = Xml.SubElement(user_remote_configs, 'hudson.plugins.git.UserRemoteConfig')
-
-    for name, tag in REQUIRED_USERREMOTECONFIG_CONFIGURATION:
-        try:
-            _add_element(user_remote_config, tag, data[name])
-        except KeyError:
-            raise Exception("missing mandatory argument %s" % name)
+        for name, tag, default in OPTIONAL_LIBRARY_CONFIGURATION:
+            _add_element(library_configuration, tag, data.get(name, default))
 
 
-    branches = Xml.SubElement(scm, 'branches')
-    branch_spec = Xml.SubElement(branches, 'hudson.plugins.git.BranchSpec')
+        retriever = Xml.SubElement(library_configuration, 'retriever',
+                                   {'class': 'org.jenkinsci.plugins.workflow.libs.SCMRetriever'})
+        scm = Xml.SubElement(retriever, 'scm',
+                             {'class': 'hudson.plugins.git.GitSCM',
+                              'plugin': 'git@3.9.1'})
+        user_remote_configs = Xml.SubElement(scm, 'userRemoteConfigs')
+        user_remote_config = Xml.SubElement(user_remote_configs, 'hudson.plugins.git.UserRemoteConfig')
 
-    for name, tag in REQUIRED_BRANCHES_CONFIGURATION:
-        try:
-            _add_element(branch_spec, tag, data[name])
-        except KeyError:
-            raise Exception("missing mandatory argument %s" % name)
+        for name, tag in REQUIRED_USERREMOTECONFIG_CONFIGURATION:
+            try:
+                _add_element(user_remote_config, tag, data[name])
+            except KeyError:
+                raise Exception("missing mandatory argument %s" % name)
 
 
-    _add_element(scm, 'doGenerateSubmoduleConfigurations', 'false')
+        branches = Xml.SubElement(scm, 'branches')
+        branch_spec = Xml.SubElement(branches, 'hudson.plugins.git.BranchSpec')
+
+        for name, tag in REQUIRED_BRANCHES_CONFIGURATION:
+            try:
+                _add_element(branch_spec, tag, data[name])
+            except KeyError:
+                raise Exception("missing mandatory argument %s" % name)
+
+        _add_element(scm, 'doGenerateSubmoduleConfigurations', 'false')
