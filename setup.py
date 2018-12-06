@@ -17,7 +17,7 @@ setup(
             'validating = jenkins_jobs_active_choice.validating:validating_parameter',
             'autocomplete = jenkins_jobs_active_choice.autocomplete:autocomplete_parameter'
         ],
-        'jenkins_jobs': [
+        'jenkins_jobs.modules': [
             'sharedlibrary = jenkins_jobs_active_choice.sharedlibrary:sharedlibrary'
         ]
     },
