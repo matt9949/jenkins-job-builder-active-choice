@@ -15,7 +15,9 @@ setup(
             'separator = jenkins_jobs_active_choice.separator:separator_parameter',
             'cascade-choice = jenkins_jobs_active_choice.active_choice:cascade_choice_parameter',
             'validating = jenkins_jobs_active_choice.validating:validating_parameter',
-            'autocomplete = jenkins_jobs_active_choice.autocomplete:autocomplete_parameter',
+            'autocomplete = jenkins_jobs_active_choice.autocomplete:autocomplete_parameter'
+        ],
+        'jenkins_jobs': [
             'sharedlibrary = jenkins_jobs_active_choice.sharedlibrary:sharedlibrary'
         ]
     },
